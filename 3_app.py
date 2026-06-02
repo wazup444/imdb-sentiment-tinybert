@@ -64,19 +64,11 @@ with st.sidebar:
 @st.cache_resource
 def load_model():
     tokenizer = AutoTokenizer.from_pretrained("textattack/bert-base-uncased-imdb")
-    model_dir = "./results_distilled_tiny"
     
-    if os.path.exists(model_dir):
-        checkpoints = [d for d in os.listdir(model_dir) if d.startswith("checkpoint")]
-        if checkpoints:
-            latest_checkpoint = max(checkpoints, key=lambda x: int(x.split("-")[1]))
-            model_path = os.path.join(model_dir, latest_checkpoint)
-        else:
-            return None, None, None
-    else:
-        return None, None, None
-
+    model_path = "."
+    
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    
     model = AutoModelForSequenceClassification.from_pretrained(model_path)
     model.to(device)
     model.eval() 
